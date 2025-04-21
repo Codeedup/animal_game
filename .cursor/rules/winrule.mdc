@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Don't write repeat cide and check yourself in the code base,
+write concise and clear code that makes sense and is efficient, 
+Don't change things in other files unless deemed necessary,
+If there is a command you want to run but my powershell wont allow it tell me and I will install it,
+

@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  authProvider    String     // 'anon' | 'google' | 'apple' | 'github'
+  displayName     String?
+  avatarUrl       String?
+  xp              Int        @default(0)
+  level           Int        @default(1)
+  deviceId        String?    @unique
+  votes           Vote[]
+  purchases       Purchase[]
+  
+  @@index([xp]) // For leaderboard queries
+  @@index([createdAt])
+}
+
+model Fight {
+  id             String     @id
+  sideAId        String
+  sideBId        String
+  winnerId       String
+  commentaryTxt  String
+  tier           FightTier
+  scheduledAt    DateTime
+  expiresAt      DateTime
+  votes          Vote[]
+  pickAShare     Float      @default(0) // updated live
+  resolved       Boolean    @default(false)
+  
+  @@index([tier, scheduledAt]) // For fetching next fights by tier
+  @@index([expiresAt]) // For checking expired fights
+  @@index([scheduledAt]) // For finding upcoming fights
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  fight     Fight    @relation(fields: [fightId], references: [id])
+  fightId   String
+  pickedId  String   // sideAId or sideBId
+  isCorrect Boolean?
+  xpAwarded Int
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, fightId]) // A user can only vote once per fight
+  @@index([userId]) // For fetching a user's votes
+  @@index([fightId]) // For aggregating votes by fight
+  @@index([createdAt]) // For time-based queries
+}
+
+model SeasonPassReward {
+  id          String   @id
+  season      Int
+  tier        String   // 'free' | 'premium'
+  xpRequired  Int
+  rewardJson  Json
+  
+  @@index([season, tier, xpRequired]) // For finding rewards by season and tier
+}
+
+model Purchase {
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  sku         String
+  amountUsd   Float
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+enum FightTier {
+  NORMAL
+  HOURLY
+  DAILY
+  WEEKLY
+} 
