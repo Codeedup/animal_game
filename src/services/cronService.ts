@@ -1,8 +1,10 @@
-import { PrismaClient, FightTier } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { schedule } from 'node-cron';
 import * as fightService from './fightService';
 
 const prisma = new PrismaClient();
+// Define the fight tier types
+type FightTier = 'NORMAL' | 'HOURLY' | 'DAILY' | 'WEEKLY';
 
 // Initialize cron jobs
 export function initializeCronJobs(): void {
@@ -26,7 +28,7 @@ export function initializeCronJobs(): void {
  */
 async function publishHourlyFights(): Promise<void> {
   console.log('Publishing hourly fights');
-  await pickAndActivateFights(FightTier.HOURLY, 1);
+  await pickAndActivateFights('HOURLY', 1);
 }
 
 /**
@@ -34,7 +36,7 @@ async function publishHourlyFights(): Promise<void> {
  */
 async function publishDailyFights(): Promise<void> {
   console.log('Publishing daily fights');
-  await pickAndActivateFights(FightTier.DAILY, 1);
+  await pickAndActivateFights('DAILY', 1);
 }
 
 /**
@@ -42,7 +44,7 @@ async function publishDailyFights(): Promise<void> {
  */
 async function publishWeeklyFight(): Promise<void> {
   console.log('Publishing weekly fight');
-  await pickAndActivateFights(FightTier.WEEKLY, 1);
+  await pickAndActivateFights('WEEKLY', 1);
 }
 
 /**
@@ -55,11 +57,11 @@ async function pickAndActivateFights(tier: FightTier, count: number): Promise<vo
     const now = new Date();
     
     // Define fight duration based on tier
-    const durationHours = {
-      [FightTier.HOURLY]: 6, // 6 hours for hourly fights
-      [FightTier.DAILY]: 12, // 12 hours for daily fights
-      [FightTier.WEEKLY]: 24, // 24 hours for weekly fights
-      [FightTier.NORMAL]: 2, // 2 hours for normal fights
+    const durationHours: Record<FightTier, number> = {
+      'HOURLY': 6, // 6 hours for hourly fights
+      'DAILY': 12, // 12 hours for daily fights
+      'WEEKLY': 24, // 24 hours for weekly fights
+      'NORMAL': 2, // 2 hours for normal fights
     };
     
     // Calculate expiration time
@@ -68,8 +70,8 @@ async function pickAndActivateFights(tier: FightTier, count: number): Promise<vo
     // Find fights that are scheduled for this tier but not yet activated
     const availableFights = await prisma.fight.findMany({
       where: {
-        tier,
-        scheduledAt: null, // Not yet scheduled
+        tier: tier as any,
+        scheduledAt: undefined, // Not yet scheduled
       },
       take: count,
     });
