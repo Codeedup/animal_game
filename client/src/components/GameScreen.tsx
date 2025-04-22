@@ -19,6 +19,10 @@ interface Player {
   };
 }
 
+interface GameScreenProps {
+  onBackToMenu?: () => void;
+}
+
 const mockSquadA: AnimalSquad = {
   id: 'squad-a',
   name: 'Lion Pride',
@@ -58,7 +62,7 @@ const mockPlayers: Player[] = [
   }
 ];
 
-const GameScreen: React.FC = () => {
+const GameScreen: React.FC<GameScreenProps> = ({ onBackToMenu }) => {
   const [votedFor, setVotedFor] = useState<string | null>(null);
 
   const handleVote = (squadId: string) => {
@@ -68,14 +72,27 @@ const GameScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen relative">
+      {/* Back button */}
+      {onBackToMenu && (
+        <button 
+          className="absolute top-2 left-4 bg-gray-800 p-2 rounded-full text-white"
+          onClick={onBackToMenu}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+      )}
+      
       {/* Main Battle Area */}
       <div className="flex-1 flex justify-between items-center px-8 pt-10">
         {/* Squad A */}
         <div className="flex flex-col items-center">
           <motion.div
             className={`relative rounded-lg overflow-hidden border-8 ${
-              votedFor === mockSquadA.id ? 'border-accent' : 'border-primary'
+              votedFor === mockSquadA.id ? 'border-yellow-500' : 'border-blue-600'
             }`}
             whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -85,25 +102,33 @@ const GameScreen: React.FC = () => {
               alt={mockSquadA.name}
               className="w-64 h-80 object-cover"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-primary bg-opacity-80 p-2 text-center">
+            <div className={`absolute bottom-0 left-0 right-0 ${
+              votedFor === mockSquadA.id ? 'bg-yellow-500' : 'bg-blue-600'
+            } bg-opacity-80 p-2 text-center`}>
               <h3 className="text-white font-bold text-xl">{mockSquadA.name}</h3>
             </div>
           </motion.div>
           <motion.button
-            className="btn btn-primary mt-4 w-40"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className={`mt-4 w-40 py-2 rounded-lg font-bold ${
+              votedFor === mockSquadA.id 
+                ? 'bg-yellow-500 text-black' 
+                : votedFor !== null
+                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                  : 'bg-blue-600 text-white'
+            }`}
+            whileHover={votedFor === null ? { scale: 1.05 } : {}}
+            whileTap={votedFor === null ? { scale: 0.95 } : {}}
             onClick={() => handleVote(mockSquadA.id)}
             disabled={votedFor !== null}
           >
-            Vote
+            {votedFor === mockSquadA.id ? 'Voted!' : 'Vote'}
           </motion.button>
         </div>
 
         {/* VS Divider */}
         <div className="text-center">
           <motion.div
-            className="text-highlight text-7xl font-bold"
+            className="text-yellow-500 text-7xl font-bold"
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
@@ -115,7 +140,7 @@ const GameScreen: React.FC = () => {
         <div className="flex flex-col items-center">
           <motion.div
             className={`relative rounded-lg overflow-hidden border-8 ${
-              votedFor === mockSquadB.id ? 'border-accent' : 'border-secondary'
+              votedFor === mockSquadB.id ? 'border-yellow-500' : 'border-red-600'
             }`}
             whileHover={{ scale: 1.05 }}
             transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -125,18 +150,26 @@ const GameScreen: React.FC = () => {
               alt={mockSquadB.name}
               className="w-64 h-80 object-cover"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-secondary bg-opacity-80 p-2 text-center">
+            <div className={`absolute bottom-0 left-0 right-0 ${
+              votedFor === mockSquadB.id ? 'bg-yellow-500' : 'bg-red-600'
+            } bg-opacity-80 p-2 text-center`}>
               <h3 className="text-white font-bold text-xl">{mockSquadB.name}</h3>
             </div>
           </motion.div>
           <motion.button
-            className="btn btn-secondary mt-4 w-40"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            className={`mt-4 w-40 py-2 rounded-lg font-bold ${
+              votedFor === mockSquadB.id 
+                ? 'bg-yellow-500 text-black' 
+                : votedFor !== null
+                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+                  : 'bg-red-600 text-white'
+            }`}
+            whileHover={votedFor === null ? { scale: 1.05 } : {}}
+            whileTap={votedFor === null ? { scale: 0.95 } : {}}
             onClick={() => handleVote(mockSquadB.id)}
             disabled={votedFor !== null}
           >
-            Vote
+            {votedFor === mockSquadB.id ? 'Voted!' : 'Vote'}
           </motion.button>
         </div>
       </div>
