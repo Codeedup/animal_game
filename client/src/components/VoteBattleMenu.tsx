@@ -11,68 +11,76 @@ const VoteBattleMenu: React.FC<VoteBattleMenuProps> = ({
   onMoreModesClick
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-6 w-full max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-white mb-8">Choose Battle Mode</h1>
-      
-      <div className="grid grid-cols-1 gap-6 w-full">
-        {/* Head to Head Button */}
+    <div className="flex flex-col p-4 pt-2 pb-16 w-full max-w-xl mx-auto">
+      {/* Central Post/Card - increased height */}
+      <div className="w-full bg-gray-800 rounded-lg shadow-lg overflow-hidden mb-3">
+        {/* Images of two competing animals - increased height */}
+        <div className="relative h-96 bg-blue-900">
+          <div className="absolute inset-0 flex">
+            <div className="w-1/2 relative overflow-hidden">
+              <img 
+                src="https://placehold.co/300x400/8A2BE2/FFFFFF?text=Lion+Team" 
+                alt="Lion Team" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-blue-600 bg-opacity-80 p-2">
+                <h3 className="text-white font-bold text-center">Lion Pride</h3>
+              </div>
+            </div>
+            <div className="w-1/2 relative overflow-hidden">
+              <img 
+                src="https://placehold.co/300x400/4B0082/FFFFFF?text=Wolf+Team" 
+                alt="Wolf Team" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-red-600 bg-opacity-80 p-2">
+                <h3 className="text-white font-bold text-center">Wolf Pack</h3>
+              </div>
+            </div>
+          </div>
+          
+          {/* VS Divider */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.div
+              className="bg-gray-900 bg-opacity-50 p-4 rounded-full text-yellow-500 text-6xl font-bold"
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              VS
+            </motion.div>
+          </div>
+        </div>
+        
+        {/* Title bar */}
+        <div className="bg-gray-800 p-4 flex justify-between items-center">
+          <h2 className="text-2xl font-bold text-white">Battle of the Day</h2>
+          <div className="bg-yellow-600 px-3 py-1 rounded-full text-sm font-bold text-white">
+            LIVE
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons - placed right below the battle card */}
+      <div className="w-full flex space-x-3 mb-2">
+        {/* Large Vote button */}
         <motion.button
-          className="relative bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-6 h-36 flex flex-col justify-between overflow-hidden shadow-lg"
+          className="flex-1 bg-yellow-500 text-black font-bold text-xl py-3 rounded-lg shadow-lg flex items-center justify-center"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
           onClick={onHeadToHeadClick}
         >
-          <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-400 rounded-full -mr-6 -mt-6 opacity-30" />
-          <div className="absolute bottom-0 left-0 w-16 h-16 bg-yellow-700 rounded-full -ml-4 -mb-4 opacity-30" />
-          
-          <div className="flex justify-between items-start">
-            <h2 className="text-2xl font-bold text-white">Head to Head</h2>
-            <div className="bg-yellow-800 rounded-full p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-              </svg>
-            </div>
-          </div>
-          
-          <div className="flex justify-between items-end">
-            <p className="text-white text-opacity-80 text-sm">
-              Classic 1v1 animal showdown. <br />Vote for your favorite!
-            </p>
-            <span className="bg-yellow-700 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-              Most Popular
-            </span>
-          </div>
+          <span className="mr-2">VOTE!</span>
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">1v1</span>
         </motion.button>
         
-        {/* More Modes Button */}
+        {/* Smaller Other Modes button */}
         <motion.button
-          className="relative bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 h-36 flex flex-col justify-between overflow-hidden shadow-lg"
+          className="w-32 bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
           onClick={onMoreModesClick}
         >
-          <div className="absolute top-0 right-0 w-20 h-20 bg-indigo-400 rounded-full -mr-6 -mt-6 opacity-30" />
-          <div className="absolute bottom-0 left-0 w-16 h-16 bg-purple-700 rounded-full -ml-4 -mb-4 opacity-30" />
-          
-          <div className="flex justify-between items-start">
-            <h2 className="text-2xl font-bold text-white">More Modes</h2>
-            <div className="bg-purple-800 rounded-full p-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="8" x2="12" y2="16"></line>
-                <line x1="8" y1="12" x2="16" y2="12"></line>
-              </svg>
-            </div>
-          </div>
-          
-          <div className="flex justify-between items-end">
-            <p className="text-white text-opacity-80 text-sm">
-              Explore tournament, team battles, <br />and special events.
-            </p>
-            <span className="bg-purple-700 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-              New!
-            </span>
-          </div>
+          Other Modes
         </motion.button>
       </div>
     </div>

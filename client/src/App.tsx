@@ -3,6 +3,7 @@ import GameScreen from './components/GameScreen';
 import BottomNavBar from './components/BottomNavBar';
 import TopBar from './components/TopBar';
 import VoteBattleMenu from './components/VoteBattleMenu';
+import HeadToHeadBattle from './components/HeadToHeadBattle';
 import './App.css';
 
 function App() {
@@ -61,7 +62,7 @@ function App() {
           />
         );
       case 'head-to-head':
-        return <GameScreen onBackToMenu={handleBackToMenu} />;
+        return <HeadToHeadBattle onBackToMenu={handleBackToMenu} />;
       case 'more-modes':
         return (
           <div className="flex items-center justify-center h-full">
