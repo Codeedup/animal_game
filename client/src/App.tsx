@@ -10,6 +10,7 @@ function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showFriends, setShowFriends] = useState(false);
   const [battleMode, setBattleMode] = useState<'menu' | 'head-to-head' | 'more-modes'>('menu');
+  const [showDailyBattle, setShowDailyBattle] = useState(false);
 
   const handleNavChange = (navId: string) => {
     setCurrentScreen(navId);
@@ -41,6 +42,11 @@ function App() {
     setBattleMode('menu');
   };
 
+  const handleBigFightsClick = () => {
+    setCurrentScreen('fight');
+    setShowDailyBattle(true);
+  };
+
   // Mock friends data
   const friends = [
     { id: 1, name: 'AnimalLover', avatar: '🦁', status: 'online', level: 7 },
@@ -58,6 +64,7 @@ function App() {
           <VoteBattleMenu 
             onHeadToHeadClick={handleHeadToHeadClick}
             onMoreModesClick={handleMoreModesClick}
+            onBigFightsClick={handleBigFightsClick}
           />
         );
       case 'head-to-head':
@@ -84,6 +91,7 @@ function App() {
         return <VoteBattleMenu 
           onHeadToHeadClick={handleHeadToHeadClick}
           onMoreModesClick={handleMoreModesClick}
+          onBigFightsClick={handleBigFightsClick}
         />;
     }
   };
@@ -136,6 +144,30 @@ function App() {
           <div className="flex items-center justify-center h-full">
             <div className="bg-gray-800 rounded-lg p-6 w-11/12 max-w-md">
               <h2 className="text-2xl font-bold text-center mb-4">Big Fights</h2>
+              
+              {/* Daily Battle Section - Show when redirected from Battle of the Day */}
+              {showDailyBattle && (
+                <div className="bg-gradient-to-r from-red-800 to-orange-700 p-4 rounded-lg text-center mb-6">
+                  <h3 className="text-xl font-bold mb-3">Battle of the Day</h3>
+                  <div className="relative rounded-lg overflow-hidden mb-3">
+                    <img 
+                      src="/first_fight.png" 
+                      alt="Battle of the Day" 
+                      className="w-full h-52 object-cover"
+                    />
+                  </div>
+                  <button 
+                    className="bg-yellow-500 text-black font-bold py-2 px-6 rounded-md inline-block"
+                    onClick={() => {
+                      setCurrentScreen('vote');
+                      setBattleMode('head-to-head');
+                    }}
+                  >
+                    Join Battle!
+                  </button>
+                </div>
+              )}
+              
               <div className="bg-gradient-to-r from-purple-800 to-blue-700 p-4 rounded-lg text-center mb-4">
                 <div className="text-4xl mb-2">🏆</div>
                 <h3 className="text-xl font-bold mb-1">Super Squad Battle</h3>
