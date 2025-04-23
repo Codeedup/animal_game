@@ -64,7 +64,7 @@ const navItems: NavItem[] = [
   },
   {
     id: 'fight',
-    label: 'Big Time Fight',
+    label: 'Big Fights',
     icon: <FightIcon />
   }
 ];

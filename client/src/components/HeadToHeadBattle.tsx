@@ -68,64 +68,6 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
   const [showConfetti, setShowConfetti] = useState(false);
   const [resultsTimeout, setResultsTimeout] = useState<NodeJS.Timeout | null>(null);
   
-  // Simulate finding an opponent
-  useEffect(() => {
-    const connectTimer = setTimeout(() => {
-      setMatchState('voting');
-      
-      // Randomly select two different squads
-      const shuffled = [...animalSquads].sort(() => 0.5 - Math.random());
-      setSquadA(shuffled[0]);
-      setSquadB(shuffled[1]);
-      
-      // Start the voting timer
-      setTimeLeft(15);
-    }, 2000);
-    
-    return () => clearTimeout(connectTimer);
-  }, []);
-  
-  // Handle timer countdown
-  useEffect(() => {
-    if (matchState !== 'voting' || timeLeft <= 0) return;
-    
-    // Skip timer if both players have voted
-    if (votedFor && opponentVote) {
-      handleShowResults();
-      return;
-    }
-    
-    const timer = setTimeout(() => {
-      if (timeLeft > 0) {
-        setTimeLeft(prevTime => prevTime - 1);
-      }
-      
-      // When timer ends, show results
-      if (timeLeft === 1) {
-        // Simulate opponent's vote if they haven't voted yet
-        if (!opponentVote) {
-          setOpponentVote(Math.random() > 0.5 ? squadA?.id || null : squadB?.id || null);
-        }
-        handleShowResults();
-      }
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, [timeLeft, matchState, opponentVote, votedFor, squadA, squadB]);
-  
-  // Handle vote
-  const handleVote = useCallback((squadId: string) => {
-    setVotedFor(squadId);
-    // Randomly determine when opponent votes (between 1-5 seconds)
-    const opponentVoteDelay = Math.floor(Math.random() * 5000) + 1000;
-    setTimeout(() => {
-      // 50% chance they vote for the same squad
-      const sameVote = Math.random() > 0.5;
-      const oppositeSquadId = squadId === squadA?.id ? squadB?.id : squadA?.id;
-      setOpponentVote(sameVote ? squadId : (oppositeSquadId || squadId));
-    }, opponentVoteDelay);
-  }, [squadA, squadB]);
-  
   // Handle showing results
   const handleShowResults = useCallback(() => {
     setMatchState('results');
@@ -158,6 +100,64 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
       return timer;
     });
   }, [votedFor, opponentVote, onBackToMenu]);
+  
+  // Simulate finding an opponent
+  useEffect(() => {
+    const connectTimer = setTimeout(() => {
+      setMatchState('voting');
+      
+      // Randomly select two different squads
+      const shuffled = [...animalSquads].sort(() => 0.5 - Math.random());
+      setSquadA(shuffled[0]);
+      setSquadB(shuffled[1]);
+      
+      // Start the voting timer
+      setTimeLeft(15);
+    }, 2000);
+    
+    return () => clearTimeout(connectTimer);
+  }, []);
+  
+  // Handle vote
+  const handleVote = useCallback((squadId: string) => {
+    setVotedFor(squadId);
+    // Randomly determine when opponent votes (between 1-5 seconds)
+    const opponentVoteDelay = Math.floor(Math.random() * 5000) + 1000;
+    setTimeout(() => {
+      // 50% chance they vote for the same squad
+      const sameVote = Math.random() > 0.5;
+      const oppositeSquadId = squadId === squadA?.id ? squadB?.id : squadA?.id;
+      setOpponentVote(sameVote ? squadId : (oppositeSquadId || squadId));
+    }, opponentVoteDelay);
+  }, [squadA, squadB]);
+  
+  // Handle timer countdown
+  useEffect(() => {
+    if (matchState !== 'voting' || timeLeft <= 0) return;
+    
+    // Skip timer if both players have voted
+    if (votedFor && opponentVote) {
+      handleShowResults();
+      return;
+    }
+    
+    const timer = setTimeout(() => {
+      if (timeLeft > 0) {
+        setTimeLeft(prevTime => prevTime - 1);
+      }
+      
+      // When timer ends, show results
+      if (timeLeft === 1) {
+        // Simulate opponent's vote if they haven't voted yet
+        if (!opponentVote) {
+          setOpponentVote(Math.random() > 0.5 ? squadA?.id || null : squadB?.id || null);
+        }
+        handleShowResults();
+      }
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [timeLeft, matchState, opponentVote, votedFor, squadA, squadB, handleShowResults]);
   
   // Clean up timeouts on unmount
   useEffect(() => {

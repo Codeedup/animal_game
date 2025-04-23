@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import GameScreen from './components/GameScreen';
 import BottomNavBar from './components/BottomNavBar';
 import TopBar from './components/TopBar';
 import VoteBattleMenu from './components/VoteBattleMenu';
@@ -136,7 +135,7 @@ function App() {
         {currentScreen === 'fight' && (
           <div className="flex items-center justify-center h-full">
             <div className="bg-gray-800 rounded-lg p-6 w-11/12 max-w-md">
-              <h2 className="text-2xl font-bold text-center mb-4">Big Time Fight</h2>
+              <h2 className="text-2xl font-bold text-center mb-4">Big Fights</h2>
               <div className="bg-gradient-to-r from-purple-800 to-blue-700 p-4 rounded-lg text-center mb-4">
                 <div className="text-4xl mb-2">🏆</div>
                 <h3 className="text-xl font-bold mb-1">Super Squad Battle</h3>
