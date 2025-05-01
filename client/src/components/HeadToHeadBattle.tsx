@@ -61,6 +61,7 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
   const [opponentScore, setOpponentScore] = useState<number>(0);
   const [playerXP, setPlayerXP] = useState<number>(0);
   const [showConcede, setShowConcede] = useState<boolean>(false);
+  const [showConcedeConfirmation, setShowConcedeConfirmation] = useState<boolean>(false);
   const [showFinalResults, setShowFinalResults] = useState<boolean>(false);
   const [isSuddenDeath, setIsSuddenDeath] = useState<boolean>(false);
   const [suddenDeathWinner, setSuddenDeathWinner] = useState<string | null>(null);
@@ -288,8 +289,14 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
     onBackToMenu();
   }, [onBackToMenu]);
   
-  // Handle concede
+  // Handle concede confirmation
   const handleConcede = useCallback(() => {
+    setShowConcedeConfirmation(true);
+  }, []);
+
+  // Handle actual concede action
+  const handleConfirmConcede = useCallback(() => {
+    setShowConcedeConfirmation(false);
     // Player loses immediately
     setShowConcede(true);
     setPlayerScore(0);
@@ -305,6 +312,11 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
       return timer;
     });
   }, [handleBackToMenu]);
+
+  // Handle cancel concede
+  const handleCancelConcede = useCallback(() => {
+    setShowConcedeConfirmation(false);
+  }, []);
   
   // Render connecting screen
   if (matchState === 'connecting') {
@@ -329,6 +341,35 @@ const HeadToHeadBattle: React.FC<HeadToHeadBattleProps> = ({ onBackToMenu }) => 
         <h2 className="text-2xl font-bold text-white mb-4">Finding an opponent...</h2>
         <div className="bg-gray-800 rounded-lg p-4 max-w-md">
           <p className="text-gray-300 text-center">Connecting you with another player for a head-to-head battle!</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Render concede confirmation popup
+  if (showConcedeConfirmation) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full mx-4">
+          <h2 className="text-2xl font-bold text-white mb-6 text-center">Are you sure you want to concede?</h2>
+          <div className="flex justify-center gap-4">
+            <motion.button
+              className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg text-lg font-bold shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleCancelConcede}
+            >
+              Back
+            </motion.button>
+            <motion.button
+              className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg text-lg font-bold shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleConfirmConcede}
+            >
+              Yes
+            </motion.button>
+          </div>
         </div>
       </div>
     );

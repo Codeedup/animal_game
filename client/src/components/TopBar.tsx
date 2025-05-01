@@ -7,6 +7,7 @@ interface TopBarProps {
   maxXP: number;
   onSettingsClick: () => void;
   onFriendsClick?: () => void;
+  coins?: number;
 }
 
 const TopBar: React.FC<TopBarProps> = ({
@@ -14,7 +15,8 @@ const TopBar: React.FC<TopBarProps> = ({
   currentXP = 256,
   maxXP = 300,
   onSettingsClick,
-  onFriendsClick = () => {}
+  onFriendsClick = () => {},
+  coins = 0
 }) => {
   const progressPercentage = (currentXP / maxXP) * 100;
 
@@ -58,6 +60,17 @@ const TopBar: React.FC<TopBarProps> = ({
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </motion.button>
+
+        {/* Coins Display */}
+        <motion.div
+          className="ml-3 p-2 rounded-full bg-gray-800 shadow-md flex items-center"
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <img src="/coin.png" alt="Coins" className="w-4 h-4 mr-1" />
+          <span className="text-white text-sm font-bold">{coins}</span>
+        </motion.div>
       </div>
 
       {/* Settings Button */}

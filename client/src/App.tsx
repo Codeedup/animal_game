@@ -104,6 +104,7 @@ function App() {
         maxXP={300}
         onSettingsClick={handleSettingsClick}
         onFriendsClick={handleFriendsClick}
+        coins={1000}
       />
       
       <div className="flex-1 overflow-y-auto pb-16 pt-16">
